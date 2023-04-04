@@ -108,6 +108,11 @@
                 collision = 1;
             }
         }
+        if (collision == 1) {
+            errorCount++
+        }
+        document.getElementsByTagName("aside")[0].innerHTML = "Errors: " + errorCount;
+        console.log("Errors:", errorCount)
     }
 
         function draw() {
@@ -120,7 +125,7 @@
     window.addEventListener('keydown',doKeyDown,true);
 </script>
 </section>
-<aside> </aside>
+<aside style="font-family: Tahoma;"></aside>
 <footer> </footer>
 </body>
 </html>
