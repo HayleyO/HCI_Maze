@@ -17,7 +17,9 @@
         This text is displayed if your browser does not support HTML5 Canvas.
     </canvas>
 </div>
-
+<p id="color-log"></p>
+<p id="screen-log"></p>
+<p id="mouseerror-log"></p>
 <script type="text/javascript">
     var canvas;
     var ctx;
@@ -29,7 +31,8 @@
     var HEIGHT = 482;
     var img = new Image();
     var collision = 0;
-
+    var errorCount = 0;
+    
     function rect(x,y,w,h) {
         ctx.beginPath();
         ctx.rect(x,y,w,h);
@@ -123,6 +126,43 @@
 
     init();
     window.addEventListener('keydown',doKeyDown,true);
+    
+    let screenLog = document.querySelector("#screen-log");
+    let colorLog = document.querySelector("#color-log");
+    let mouseErrorLog = document.querySelector("#mouseerror-log");
+    
+    document.addEventListener("mousemove", function(e){
+        var x = e.clientX,
+            y = e.clientY;
+
+          result = detectLine(x, y);
+          screenLog.innerText = `
+            Mouse X/Y: ${x}, ${y}`;
+           if(result) {
+               colorLog.innerText='BLACK';
+               errorCount++;
+               console.log("mouse errors: " + errorCount);
+               mouseErrorLog.innerText = errorCount;
+               
+           }
+           else{
+              	colorLog.innerText='WHITE';
+           }
+       
+       
+    })
+
+
+    function detectLine(x, y) {
+        canvas = document.getElementById("canvas");
+        var pixelData = canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+ 
+       if(pixelData[0]==pixelData[1] && pixelData[1]==pixelData[2] && pixelData[2]===0 ){
+          return true
+       }
+        return false;
+    }
+
 </script>
 </section>
 <aside style="font-family: Tahoma;"></aside>
