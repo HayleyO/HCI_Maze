@@ -32,6 +32,7 @@
     var img = new Image();
     var collision = 0;
     var errorCount = 0;
+    var lineChecker = false;
     
     function rect(x,y,w,h) {
         ctx.beginPath();
@@ -138,15 +139,16 @@
           result = detectLine(x, y);
           screenLog.innerText = `
             Mouse X/Y: ${x}, ${y}`;
-           if(result) {
+           if(result && !lineChecker) {
                colorLog.innerText='BLACK';
                errorCount++;
-               console.log("mouse errors: " + errorCount);
-               mouseErrorLog.innerText = errorCount;
+               lineChecker = true;
+               mouseErrorLog.innerText = "mouse errors: " + errorCount;
                
            }
-           else{
+           else if (!result) {
               	colorLog.innerText='WHITE';
+                lineChecker = false;
            }
        
        
