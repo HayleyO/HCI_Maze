@@ -12,6 +12,10 @@
 <!-- This code was taken from: https://html5.litten.com/make-a-maze-game-on-an-html5-canvas/-->
 
 <!-- TO DO: Mouse-->
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<p id="time">00:00:00</p>
+
 <div>
     <canvas id="canvas" width="482" height="482">
         This text is displayed if your browser does not support HTML5 Canvas.
@@ -131,6 +135,17 @@
     let screenLog = document.querySelector("#screen-log");
     let colorLog = document.querySelector("#color-log");
     let mouseErrorLog = document.querySelector("#mouseerror-log");
+    let startTime, elapsedTime = 0;
+    let timerInterval;
+
+    const startButton = document.getElementById("start");
+    const stopButton = document.getElementById("stop");
+    const timeDisplay = document.getElementById("time");
+
+    startButton.addEventListener("click", startTimer);
+    stopButton.addEventListener("click", stopTimer);
+
+
     
     document.addEventListener("mousemove", function(e){
         var x = e.clientX,
@@ -164,6 +179,26 @@
        }
         return false;
     }
+
+    function startTimer() {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(updateTimeDisplay, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    function updateTimeDisplay() {
+        const currentTime = Date.now();
+        const elapsedTimeInSeconds = Math.floor((currentTime - startTime) / 1000);
+        const hours = Math.floor(elapsedTimeInSeconds / 3600);
+        const minutes = Math.floor((elapsedTimeInSeconds % 3600) / 60);
+        const seconds = elapsedTimeInSeconds % 60;
+        timeDisplay.textContent = `${hours}:${minutes}:${seconds.toString().padStart(2, '0')}`;
+        elapsedTime = currentTime - startTime;
+    }
+
 
 </script>
 </section>
