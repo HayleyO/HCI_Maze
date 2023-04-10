@@ -11,6 +11,7 @@
 
 <!-- This code was taken from: https://html5.litten.com/make-a-maze-game-on-an-html5-canvas/-->
 
+<!-- TO DO: Mouse-->
 <button id="start">Start</button>
 <button id="stop">Stop</button>
 <p id="time">00:00:00</p>
@@ -55,8 +56,57 @@
         img.src = "maze.gif";
         return setInterval(draw, 10);
     }
-         
-     
+
+    function doKeyDown(evt){
+        switch (evt.keyCode) {
+            case 38:  /* Up arrow was pressed */
+            if (y - dy > 0){
+                y -= dy;
+                clear();
+                checkcollision();
+                if (collision == 1){
+                    y += dy;
+                    collision = 0;
+                }
+            }
+
+            break;
+            case 40:  /* Down arrow was pressed */
+            if (y + dy < HEIGHT ){
+                y += dy;
+                clear();
+                checkcollision();
+                if (collision == 1){
+                    y -= dy;
+                    collision = 0;
+                }
+            }
+
+            break;
+            case 37:  /* Left arrow was pressed */
+            if (x - dx > 0){
+                x -= dx;
+                clear();
+                checkcollision();
+                if (collision == 1){
+                    x += dx;
+                    collision = 0;
+                }
+            }
+            break;
+            case 39:  /* Right arrow was pressed */
+            if ((x + dx < WIDTH)){
+                x += dx;
+                clear();
+                checkcollision();
+                if (collision == 1){
+                    x -= dx;
+                    collision = 0;
+                }
+            }
+            break;
+        }
+    }
 
     function checkcollision() {
         var imgd = ctx.getImageData(x, y, 15, 15);
