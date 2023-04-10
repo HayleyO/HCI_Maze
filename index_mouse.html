@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Maze</title>
+</head>
+<body>
+<header> </header>
+<nav> </nav>
+<section>
+
+<!-- This code was taken from: https://html5.litten.com/make-a-maze-game-on-an-html5-canvas/-->
+
+<button id="start">Start</button>
+<button id="stop">Stop</button>
+<p id="time">00:00:00</p>
+
+<div>
+    <canvas id="canvas" width="482" height="482">
+        This text is displayed if your browser does not support HTML5 Canvas.
+    </canvas>
+</div>
+<p id="color-log"></p>
+<p id="screen-log"></p>
+<p id="mouseerror-log"></p>
+<script type="text/javascript">
+    var canvas;
+    var ctx;
+    var dx = 5;
+    var dy = 5;
+    var x = 200;
+    var y = 5;
+    var WIDTH = 482;
+    var HEIGHT = 482;
+    var img = new Image();
+    var collision = 0;
+    var errorCount = 0;
+    var lineChecker = false;
+    
+    function rect(x,y,w,h) {
+        ctx.beginPath();
+        ctx.rect(x,y,w,h);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function clear() {
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        ctx.drawImage(img, 0, 0);
+    }
+
+    function init() {
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext("2d");
+        img.src = "maze.gif";
+        return setInterval(draw, 10);
+    }
+         
+     
+
+    function checkcollision() {
+        var imgd = ctx.getImageData(x, y, 15, 15);
+        var pix = imgd.data;
+        for (var i = 0; n = pix.length, i < n; i += 4) {
+            if (pix[i] == 0) {
+                collision = 1;
+            }
+        }
+        if (collision == 1) {
+            errorCount++
+        }
+        document.getElementsByTagName("aside")[0].innerHTML = "Errors: " + errorCount;
+        console.log("Errors:", errorCount)
+    }
+
+        function draw() {
+            clear();
+        }
+
+    init();
+    window.addEventListener('keydown',doKeyDown,true);
+    
+    let screenLog = document.querySelector("#screen-log");
+    let colorLog = document.querySelector("#color-log");
+    let mouseErrorLog = document.querySelector("#mouseerror-log");
+    let startTime, elapsedTime = 0;
+    let timerInterval;
+
+    const startButton = document.getElementById("start");
+    const stopButton = document.getElementById("stop");
+    const timeDisplay = document.getElementById("time");
+
+    startButton.addEventListener("click", startTimer);
+    stopButton.addEventListener("click", stopTimer);
+
+
+    
+    document.addEventListener("mousemove", function(e){
+        var x = e.clientX,
+            y = e.clientY;
+
+          result = detectLine(x, y);
+          screenLog.innerText = `
+            Mouse X/Y: ${x}, ${y}`;
+           if(result && !lineChecker) {
+               colorLog.innerText='BLACK';
+               errorCount++;
+               lineChecker = true;
+               mouseErrorLog.innerText = "mouse errors: " + errorCount;
+               
+           }
+           else if (!result) {
+              	colorLog.innerText='WHITE';
+                lineChecker = false;
+           }
+       
+       
+    })
+
+
+    function detectLine(x, y) {
+        canvas = document.getElementById("canvas");
+        var pixelData = canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+ 
+       if(pixelData[0]==pixelData[1] && pixelData[1]==pixelData[2] && pixelData[2]===0 ){
+          return true
+       }
+        return false;
+    }
+
+    function startTimer() {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(updateTimeDisplay, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    function updateTimeDisplay() {
+        const currentTime = Date.now();
+        const elapsedTimeInSeconds = Math.floor((currentTime - startTime) / 1000);
+        const hours = Math.floor(elapsedTimeInSeconds / 3600);
+        const minutes = Math.floor((elapsedTimeInSeconds % 3600) / 60);
+        const seconds = elapsedTimeInSeconds % 60;
+        timeDisplay.textContent = `${hours}:${minutes}:${seconds.toString().padStart(2, '0')}`;
+        elapsedTime = currentTime - startTime;
+    }
+
+
+</script>
+</section>
+<aside style="font-family: Tahoma;"></aside>
+<footer> </footer>
+</body>
+</html>
